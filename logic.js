@@ -2,7 +2,7 @@
 const btnAddCard = document.querySelector('button');
 const popUpWindow = document.querySelector('.popup');
 const iconeClose = document.querySelector('.fa-times-circle');
-const addCardForm = document.querySelector('.addCard');
+const addCardForm = document.querySelector('.addCardForm');
 const container = document.querySelector('.container');
 const lis = document.getElementsByTagName('li');
 let counter = 0;
@@ -18,26 +18,20 @@ function addCard(e) {
 }
 
 function createElement(cardName) {
-    // main container
     const divContainer = document.createElement('div');
     divContainer.classList.add('wrapper');
-    // close icon
     const closeIcon = document.createElement('i');
     closeIcon.classList.add('far', 'fa-times-circle', 'closeCard');
     divContainer.append(closeIcon);
-    // title
-    const h2 = document.createElement('h2');
-    h2.classList.add('title');
-    h2.textContent = cardName
-    divContainer.append(h2);
-    // hr
-    const hr = document.createElement('hr');
-    divContainer.append(hr);
-    // list
-    const ul = document.createElement('ul');
-    ul.dataset.id = counter;
-    divContainer.append(ul);
-    // form
+    const cardTitle = document.createElement('h2');
+    cardTitle.classList.add('title');
+    cardTitle.textContent = cardName
+    divContainer.append(cardTitle);
+    const divider = document.createElement('hr');
+    divContainer.append(divider);
+    const list = document.createElement('ul');
+    list.dataset.id = counter;
+    divContainer.append(list);
     const form = document.createElement('form');
     form.classList.add('taskForm');
     form.dataset.id = counter;
@@ -46,28 +40,30 @@ function createElement(cardName) {
 `;
     divContainer.append(form);
     counter++;
-    // taskFormListener.push(divContainer.querySelector('.taskForm'))
     return divContainer;
 }
 
 function addTask(e) {
     if (e.target.classList.contains('taskForm')) {
         e.preventDefault();
-        let clickedEl = e.target.parentElement.querySelector('ul').dataset.id
-        const ul = this.getElementsByTagName('ul');
-
+        let clickedEl = e.target.parentElement.querySelector('ul').dataset.id;
+        const uls = this.querySelectorAll('ul');
         const content = e.target.parentElement.querySelector('#task').value;
-        ul[clickedEl].append(createLi(content));
-        e.target.parentElement.querySelector('.taskForm').reset();
+        uls.forEach((ul, i) => {
+            if (clickedEl === ul.dataset.id) {
+                ul.append(createSingleTask(content));
+            }
+        })
+        e.target.reset();
     }
 }
 
-function createLi(content) {
-    const li = document.createElement('li');
+const createSingleTask = (userInput) => {
+    let li = document.createElement('li');
     li.innerHTML = `<i class="far fa-circle circle"></i>
     <i class="fas fa-trash-alt trash"></i>
-    <span class="taskToDo">${content}</span>
-`
+    <span class="taskToDo">${userInput}</span>
+        `
     return li;
 }
 
